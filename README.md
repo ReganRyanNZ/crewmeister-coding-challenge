@@ -5,6 +5,10 @@
   - The first was to simply generate an ical string using the dummy api supplied. The code for this can be seen on the branch `feature/absences`.
   - The second was to create a rails app so that I could run a server and download the file by visiting `localhost:3000/`, and to add filter options via params to this request. The code for this was on branch `feature/web-interface` and has been merged into `master`.
 - I made a set of tests for `absences.rb`, and a second set of request specs for the request to download the file. You can run these tests with: `rspec`
+- You can test manually by running `rails s` and trying the following urls:
+  - http://localhost:3000/ (all absences)
+  - http://localhost:3000/?userId=2664 (all absences for specified user)
+  - http://localhost:3000/?startDate=2017-02-14&endDate=2017-03-16 (all absences for specified timeframe)
 - The rails app is mostly boilerplate code, the main files to check are:
   - `ruby_edition/cm_challenge/absences.rb`
   - `ruby_edition/app/controllers/absences_controller.rb`
