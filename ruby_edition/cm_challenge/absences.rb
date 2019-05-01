@@ -3,10 +3,26 @@ require 'icalendar'
 
 module CmChallenge
   class Absences
-    def to_ical
+
+    def initialize filters={}
       @absences = CmChallenge::Api.absences
       @members = CmChallenge::Api.members
 
+      if filters["userId"].present?
+        @absences = @absences.select{ |a| a[:user_id] == filters["userId"].to_i }
+        @members = @members.select{ |m| m[:user_id] == filters["userId"].to_i }
+      end
+
+      if filters["startDate"].present?
+        @absences = @absences.select { |a| a[:start_date] >= filters["startDate"] }
+      end
+
+      if filters["endDate"].present?
+        @absences = @absences.select { |a| a[:end_date] <= filters["endDate"] }
+      end
+    end
+
+    def to_ical
       cal = Icalendar::Calendar.new
       @absences.each do |absence|
         member = @members.find { |member| member[:user_id] == absence[:user_id] }
