@@ -1,5 +1,5 @@
-require_relative './api'
-require 'icalendar'
+require_relative "./api"
+require "icalendar"
 
 module CmChallenge
   class Absences
@@ -27,8 +27,8 @@ module CmChallenge
       @absences.each do |absence|
         member = @members.find { |member| member[:user_id] == absence[:user_id] }
         cal.event do |e|
-          e.dtstart     = Icalendar::Values::Date.new(absence[:start_date].gsub('-', ''))
-          e.dtend       = Icalendar::Values::Date.new(absence[:end_date].gsub('-', ''))
+          e.dtstart     = Icalendar::Values::Date.new(absence[:start_date].gsub("-", ""))
+          e.dtend       = Icalendar::Values::Date.new(absence[:end_date].gsub("-", ""))
           e.summary     = absence_summary(absence[:type], member[:name])
           e.description = absence_description(absence[:member_note], member[:name])
           e.ip_class    = "PRIVATE"

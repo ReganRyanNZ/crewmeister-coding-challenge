@@ -1,4 +1,4 @@
-require_relative '../../cm_challenge/absences'
+require_relative "../../cm_challenge/absences"
 
 class AbsencesController < ApplicationController
 

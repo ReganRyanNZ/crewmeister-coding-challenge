@@ -1,18 +1,18 @@
-require_relative '../cm_challenge/absences'
-require 'icalendar'
+require_relative "../cm_challenge/absences"
+require "icalendar"
 
-RSpec.describe 'Absences' do
-  describe 'to_ical' do
+RSpec.describe "Absences" do
+  describe "to_ical" do
     subject { CmChallenge::Absences.new.to_ical }
-    it 'returns an ical object' do
+    it "returns an ical object" do
       expect(subject.class).to eq(Icalendar::Calendar)
     end
 
-    it 'includes all events in ical object' do
+    it "includes all events in ical object" do
       expect(subject.events.count).to eq(42)
     end
 
-    it 'includes correct data in events' do
+    it "includes correct data in events" do
       expect(subject.events.first.summary).to eq("Mike is sick")
       expect(subject.events.first.description).to eq("")
       expect(subject.events.first.dtstart.to_s).to eq("2017-01-13")
