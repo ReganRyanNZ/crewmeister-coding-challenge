@@ -8,18 +8,9 @@ module CmChallenge
       @absences = CmChallenge::Api.absences
       @members = CmChallenge::Api.members
 
-      if filters["userId"].present?
-        @absences = @absences.select{ |a| a[:user_id] == filters["userId"].to_i }
-        @members = @members.select{ |m| m[:user_id] == filters["userId"].to_i }
-      end
-
-      if filters["startDate"].present?
-        @absences = @absences.select { |a| a[:start_date] >= filters["startDate"] }
-      end
-
-      if filters["endDate"].present?
-        @absences = @absences.select { |a| a[:end_date] <= filters["endDate"] }
-      end
+      filter_users(filters["userId"]) if filters["userId"].present?
+      filter_start_dates(filters["startDate"]) if filters["startDate"].present?
+      filter_end_dates(filters["endDate"]) if filters["endDate"].present?
     end
 
     def to_ical
@@ -39,6 +30,27 @@ module CmChallenge
     end
 
     private
+
+    def filter_users user_id
+      @absences = @absences.select{ |a| a[:user_id] == user_id.to_i }
+      @members = @members.select{ |m| m[:user_id] == user_id.to_i }
+    end
+
+    def filter_start_dates filter_date
+      @absences = @absences.select { |a| a[:end_date] >= filter_date }
+
+      @absences = @absences.each do |a|
+        a[:start_date] = [a[:start_date], filter_date].max
+      end
+    end
+
+    def filter_end_dates filter_date
+      @absences = @absences.select { |a| a[:start_date] <= filter_date }
+
+      @absences = @absences.each do |a|
+        a[:end_date] = [a[:end_date], filter_date].min
+      end
+    end
 
     def absence_description member_note, name
       member_note.empty? ? "" : "#{name}'s note: #{member_note}"
