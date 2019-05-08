@@ -39,4 +39,22 @@ RSpec.describe "Absences ical", type: :request do
       ).to be true
     end
   end
+
+  context "with user and date params" do
+    before { get "/", params: {userId: 2664, startDate: "2017-02-14", endDate: "2017-04-01"} }
+
+    it "contains information for that user only" do
+      expect(response.body.scan(/SUMMARY:/).count).to eq(3)
+      expect(response.body.scan(/SUMMARY:Mike/).count).to eq(3)
+    end
+
+    it "contains absences only in that time frame" do
+      expect(
+        response.body.scan(/DATE:\d{8}/).all? do |date_str|
+          date = date_str[/\d+/]
+          date > "20170214" && date < "20170401"
+        end
+      ).to be true
+    end
+  end
 end
